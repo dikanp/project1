@@ -12,35 +12,39 @@ const getProductsFromFile = cb => {
 }
 
 module.exports = class Product {
-    constructor(title, imageUrl, description, price) {
-        this.id = Math.random().toString();
+    constructor(id, title, imageUrl, description, price) {
+        this.id = id
         this.title = title
         this.imageUrl = imageUrl
         this.price = price
         // this.quantity = quantity
         this.description = description
     }
-
+    
     //function save
     save() {
         // products.push(this);
         getProductsFromFile(products => {
-            console.log(this);
-            products.push(this);
-            fs.writeFile(p, JSON.stringify(products), (err) => {
-                console.log(err);
-            })
-        // const p = path.join(__dirname, '..', 'data', 'products.json');
-        // fs.readFile(p, (err, filecontent) => {
-        //     console.log(filecontent);
-        //     let products = [];
-        //     if ((!err) && filecontent !='') {
-        //         products = JSON.parse(filecontent);
-        //     }
-        //     products.push(this);
-        //     fs.writeFile(p, JSON.stringify(products), (err) => {
-        //         // console.log(err);
-        //     })
+            console.log(this.id)
+            if (this.id){
+                const existingProductIndex = products.findIndex(
+                    prod => prod.id == this.id
+                )
+                const updatedProduct = [...products]
+                console.log(updatedProduct)
+                updatedProduct[existingProductIndex] = this
+                console.log(updatedProduct)
+                // return 0
+                fs.writeFile(p, JSON.stringify(updatedProduct), (err) => {
+                    console.log(err);
+                })
+            } else {
+                this.id = Math.random().toString();
+                products.push(this);
+                fs.writeFile(p, JSON.stringify(products), (err) => {
+                    console.log(err);
+                })
+            }
         })
     }
 

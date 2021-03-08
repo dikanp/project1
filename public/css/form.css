@@ -3,6 +3,7 @@
 }
 
 .form-control label,
+.form-control img,
 .form-control input,
 .form-control textarea {
     display: block;
