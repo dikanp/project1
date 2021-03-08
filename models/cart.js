@@ -13,6 +13,7 @@ module.exports = class Cart {
     static addProduct(id, productPrice) {
         console.log(productPrice);
         fs.readFile(p, (err, fileContent) => {
+            console.log(err)
             let cart = {products : [], totalPrice: 0}
             if (!err){
                 cart = JSON.parse(fileContent);
@@ -25,13 +26,14 @@ module.exports = class Cart {
             if (existingProduct) {
                 updatedProduct = {...existingProduct}
                 updatedProduct.qty = updatedProduct.qty + 1
-                cart.products = [...cart.products]
+                // cart.products = [...cart.products]
                 cart.products[existingProductIndex] = updatedProduct
             } else {
                 updatedProduct = {id: id, qty: 1}
-                cart.products = [...cart.products, updatedProduct]
+                cart.products.push(updatedProduct)
+                // cart.products = [...cart.products, updatedProduct]
             }
-            cart.totalPrice = cart.totalPrice + productPrice
+            cart.totalPrice = cart.totalPrice + +productPrice
             fs.writeFile(p, JSON.stringify(cart), err => {
                 console.log(err)
             })

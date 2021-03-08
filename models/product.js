@@ -53,11 +53,11 @@ module.exports = class Product {
     static findById(id, cb){
         getProductsFromFile(products => {
             const product = products.find(p => {
-                console.log(p.id)
-                console.log(id)
+                // console.log(p.id)
+                // console.log(product)
                 return p.id === id
             });
-            console.log(product)
+            // console.log(product)
             cb(product);
         })
     }
