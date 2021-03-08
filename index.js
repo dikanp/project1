@@ -1,26 +1,44 @@
 const path = require('path');
 const express = require('express');
 const bodyParser = require('body-parser');
+const errorController = require('./controllers/error.controllers');
 const app = express();
 
-const adminData = require('./routes/admin');
-const shopRoutes = require('./routes/shop');
+app.set('view engine', 'ejs');
+app.set('views', 'views')
+
+const adminRoutes = require('./routes/admin.routes');
+const shopRoutes = require('./routes/shop.routes');
+const { response } = require('express');
 
 // app.get mencari exact string yg sama sedangkan
 // app.use mencari like after string
-app.use(bodyParser.urlencoded({extended: true}));
-app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(shopRoutes);
-app.use('/admin', adminData.routes);
+async function start(){
+    try {
+        app.use(bodyParser.urlencoded({extended: true}));
+        app.use(express.static(path.join(__dirname, 'public')));
 
-app.use((req, res, next) => {
-    res.status(404).sendFile(path.join(__dirname, 'views', '404.html'));
-})
-// app.use('/favicon.ico',(req,res,next)=>{
-//     res.sendStatus(204);
-//     res.end();
-// });
+        app.use(shopRoutes);
+        app.use('/admin', adminRoutes );
+        app.use('/tesAPI', (req ,res,next) => {
+            let responseObject = {}
+            responseObject['unix'] = new Date().getTime()
+            // responseObject['utc'] = new Date().toUTCString()
+            let utc = new Date().toUTCString()
+            responseObject['utc'] = utc.toLocaleString('id-ID', {timeZone: 'Asia/Jakarta'})
+            return res.json(responseObject);
+        })
+        app.use(errorController.get404);
+        // app.use('/favicon.ico',(req,res,next)=>{
+        //     res.sendStatus(204);
+        //     res.end();
+        // });
+        app.listen(3000);
+    }
+    catch(e) {
+        console.log('error while starting the server', e)
+    }
+}
 
-
-app.listen(3000);
+start();
