@@ -14,10 +14,13 @@ module.exports = class Cart {
         console.log(productPrice);
         fs.readFile(p, (err, fileContent) => {
             console.log(err)
+            console.log(fileContent.toString())
+            // return
             let cart = {products : [], totalPrice: 0}
-            if (!err){
+            if (!err && fileContent!=''){
                 cart = JSON.parse(fileContent);
             }
+            // return
             const existingProductIndex = cart.products.findIndex(prod => {
                 return prod.id === id
             })
@@ -38,5 +41,24 @@ module.exports = class Cart {
                 console.log(err)
             })
         })
+    }
+
+    static deleteProduct(id, productPrice){
+         fs.readFile(p, (err, fileContent) => {
+            console.log('buka file cart')
+            if (err) return
+            const cart = JSON.parse(fileContent);
+            const updatedCart = { ...cart }
+            const product = updatedCart.products.find(
+                product => product.id == id
+            )
+            const productQty = product.qty
+            updatedCart.products = updatedCart.products.filter(prod => prod.id != id)
+            updatedCart.totalPrice = updatedCart.totalPrice - productPrice * productQty
+            fs.writeFile(p, JSON.stringify(updatedCart), err => {
+                console.log(err)
+                console.log('data cart terhapus')
+            })
+         })
     }
 }
