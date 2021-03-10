@@ -46,12 +46,13 @@ module.exports = class Cart {
     static deleteProduct(id, productPrice){
          fs.readFile(p, (err, fileContent) => {
             console.log('buka file cart')
-            if (err) return
+            if (err || fileContent=='') return
             const cart = JSON.parse(fileContent);
             const updatedCart = { ...cart }
             const product = updatedCart.products.find(
                 product => product.id == id
             )
+            if(!product) return
             const productQty = product.qty
             updatedCart.products = updatedCart.products.filter(prod => prod.id != id)
             updatedCart.totalPrice = updatedCart.totalPrice - productPrice * productQty
@@ -60,5 +61,13 @@ module.exports = class Cart {
                 console.log('data cart terhapus')
             })
          })
+    }
+
+    static getCart(cb) {
+        fs.readFile(p, (err, fileContent) => {
+            const cart = JSON.parse(fileContent)
+            if (err || fileContent == '') return cb(null)
+            cb(cart)
+        })
     }
 }
