@@ -3,6 +3,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const errorController = require('./controllers/error.controllers');
 const app = express();
+// const db = require('./util/database');
 
 app.set('view engine', 'ejs');
 app.set('views', 'views')
@@ -10,6 +11,11 @@ app.set('views', 'views')
 const adminRoutes = require('./routes/admin.routes');
 const shopRoutes = require('./routes/shop.routes');
 const { response } = require('express');
+
+// db.connect();
+// db.query()
+// db.query(`SELECT * FROM users`).then(res => console.log(res.fields[0].name))
+
 
 // app.get mencari exact string yg sama sedangkan
 // app.use mencari like after string
