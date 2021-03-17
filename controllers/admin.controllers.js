@@ -49,14 +49,22 @@ exports.getEditProduct = (req, res, next) => {
     // res.sendFile(path.join(__dir  name, '..', 'views', 'add-product.html'));
 };
 
-exports.getProducts = (req, res, next) => {
-    Product.fetchAll().then(products => {
+exports.getProducts = async (req, res, next) => {
+    // Product.fetchAll().then(products => {
+    //     console.log(products)
+    // }).catch()
+    try{
+        const {rows} = await Product.fetchAll();
         res.render('admin/products', {
-            prods: products,
+            prods: rows,
             pageTitle: 'Admin Products',
             path: '/admin/products'
         })
-    }).catch()
+        console.log(product)
+    }
+    catch(error) {
+        console.log(error)
+    }
 }
 
 exports.deleteProduct = (req, res, next) => {

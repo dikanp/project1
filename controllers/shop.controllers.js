@@ -26,16 +26,16 @@ exports.getProducts = (req, res, next) => {
 exports.getProduct = (req, res, next) => {
   const prodId = req.params.productId;
   console.log(prodId);
-  Product.findById(prodId, (product) => {
-    // console.log(product);
+  Product.findById(prodId).then(({ rows }) => {
+    // console.log(rows);
     res.render("shop/product-detail", {
-      product: product,
-      pageTitle: product.title,
+      product: rows[0],
+      pageTitle: rows[0].title,
       path: "products/" + prodId,
     });
-  });
+  }).catch(err => console.log(err)
   // console.log(products);
-};
+  )};
 
 exports.getIndex = (req, res, next) => {
   Product.fetchAll()
